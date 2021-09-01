@@ -15,13 +15,13 @@ import (
 // InitLog 初始化日志文件 logPath= /home/logs/app/appName/childPath
 func InitLog(options ...LogOptionFunc) {
 	for _, f := range options {
-		f(defaultLogConfig)
+		f(DefaultConfig)
 	}
 
-	Sugar = initSugar(defaultLogConfig)
+	Sugar = initSugar(DefaultConfig)
 }
 
-func initSugar(lc *LogConfig) *zap.Logger {
+func initSugar(lc *Config) *zap.Logger {
 	loglevel := zapcore.InfoLevel
 	defaultLogLevel.SetLevel(loglevel)
 

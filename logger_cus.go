@@ -8,12 +8,12 @@ import (
 
 type CusLog struct {
 	Logger *zap.Logger
-	Config *LogConfig
+	Config *Config
 }
 
 // NewLogger 得到一个zap.Logger
 func NewLogger(options ...LogOptionFunc) *CusLog {
-	var cus = &CusLog{Config: defaultLogConfig}
+	var cus = &CusLog{Config: DefaultConfig}
 	for _, f := range options {
 		f(cus.Config)
 	}

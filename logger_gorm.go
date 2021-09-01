@@ -10,6 +10,8 @@ import (
 	"gorm.io/gorm/utils"
 )
 
+var SqlLogger = "sql_logger"
+
 func Default(writer *zap.Logger, level logger.LogLevel) logger.Interface {
 	var config = logger.Config{
 		SlowThreshold: 200 * time.Millisecond,
