@@ -1,9 +1,8 @@
 package glogs
 
 import (
-	"context"
-	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
+	"net/http"
 )
 
 type CusLog struct {
@@ -24,27 +23,27 @@ func NewLogger(options ...LogOptionFunc) *CusLog {
 
 func (l *CusLog) Info(template string, args ...interface{}) {
 	msg, fields := dealWithArgs(template, args...)
-	writer(context.Background(), l.Logger, LevelInfo, msg, LevelInfo, fields...)
+	writer(nil, l.Logger, LevelInfo, msg, LevelInfo, fields...)
 }
-func (l *CusLog) InfoF(c *gin.Context, title string, template string, args ...interface{}) {
+func (l *CusLog) InfoF(r *http.Request, title string, template string, args ...interface{}) {
 	msg, fields := dealWithArgs(template, args...)
-	writer(c, l.Logger, LevelInfo, msg, title, fields...)
+	writer(r, l.Logger, LevelInfo, msg, title, fields...)
 }
 
 func (l *CusLog) Warn(template string, args ...interface{}) {
 	msg, fields := dealWithArgs(template, args...)
-	writer(context.Background(), l.Logger, LevelWarn, msg, LevelWarn, fields...)
+	writer(nil, l.Logger, LevelWarn, msg, LevelWarn, fields...)
 }
-func (l *CusLog) WarnF(c *gin.Context, title string, template string, args ...interface{}) {
+func (l *CusLog) WarnF(r *http.Request, title string, template string, args ...interface{}) {
 	msg, fields := dealWithArgs(template, args...)
-	writer(c, l.Logger, LevelWarn, msg, title, fields...)
+	writer(r, l.Logger, LevelWarn, msg, title, fields...)
 }
 
 func (l *CusLog) Error(template string, args ...interface{}) {
 	msg, fields := dealWithArgs(template, args...)
-	writer(context.Background(), l.Logger, LevelError, msg, LevelError, fields...)
+	writer(nil, l.Logger, LevelError, msg, LevelError, fields...)
 }
-func (l *CusLog) ErrorF(c *gin.Context, title string, template string, args ...interface{}) {
+func (l *CusLog) ErrorF(r *http.Request, title string, template string, args ...interface{}) {
 	msg, fields := dealWithArgs(template, args...)
-	writer(c, l.Logger, LevelError, msg, title, fields...)
+	writer(r, l.Logger, LevelError, msg, title, fields...)
 }

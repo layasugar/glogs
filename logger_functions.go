@@ -1,13 +1,12 @@
 package glogs
 
 import (
-	"context"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	rl "github.com/layasugar/glogs/log"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"io"
+	"net/http"
 	"time"
 )
 
@@ -99,33 +98,27 @@ func SetNoBuffWriter() LogOptionFunc {
 	}
 }
 
-func writer(ctx context.Context, logger *zap.Logger, level, msg string, title string, fields ...zap.Field) {
+func writer(r *http.Request, logger *zap.Logger, level, msg string, title string, fields ...zap.Field) {
 	if logger == nil {
 		fmt.Println(msg)
 		return
 	}
 
-	// 断言ctx是什么类型
-	switch ctx.(type) {
-	case *gin.Context:
-		if c, ok := ctx.(*gin.Context); ok {
-			requestID := c.GetHeader(RequestIDName)
-			originAppName := c.GetHeader(HeaderAppName)
-			path := c.Request.RequestURI
-			fields = append(fields, zap.String(KeyPath, path),
-				zap.String(RequestIDName, requestID),
-				zap.String(KeyTitle, title),
-				zap.String(KeyOriginAppName, originAppName))
-			do(logger, level, msg, fields...)
-		}
-	case nil:
+	if r == nil {
 		fields = append(fields, zap.String(KeyTitle, title))
 		do(logger, level, msg, fields...)
-	default:
-		s := fmt.Sprintf("%s", ctx)
-		fields = append(fields, zap.String(KeyCtx, s), zap.String(KeyTitle, title))
-		do(logger, level, msg, fields...)
+		return
 	}
+
+	requestID := r.Header.Get(RequestIDName)
+	originAppName := r.Header.Get(HeaderAppName)
+	path := r.RequestURI
+	fields = append(fields, zap.String(KeyPath, path),
+		zap.String(RequestIDName, requestID),
+		zap.String(KeyTitle, title),
+		zap.String(KeyOriginAppName, originAppName))
+	do(logger, level, msg, fields...)
+	return
 }
 
 func do(logger *zap.Logger, level, msg string, fields ...zap.Field) {

@@ -6,13 +6,6 @@ import (
 )
 
 const (
-	RequestIDName    = "x-b3-traceid"
-	HeaderAppName    = "app-name"
-	KeyPath          = "path"
-	KeyTitle         = "title"
-	KeyOriginAppName = "origin_app_name"
-	KeyCtx           = "ctx"
-
 	DefaultAppName       = "default-app"        // 默认应用名称
 	DefaultAppMode       = "dev"                // 默认应用环境
 	DefaultLogType       = "file"               // 默认日志类型
@@ -27,6 +20,14 @@ const (
 	LevelInfo  = "info"
 	LevelWarn  = "warn"
 	LevelError = "error"
+)
+
+var (
+	RequestIDName    = "x-b3-traceid"
+	HeaderAppName    = "app-name"
+	KeyPath          = "path"
+	KeyTitle         = "title"
+	KeyOriginAppName = "origin_app_name"
 )
 
 type Config struct {

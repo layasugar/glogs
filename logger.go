@@ -3,12 +3,11 @@
 package glogs
 
 import (
-	"context"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"log"
+	"net/http"
 	"os"
 )
 
@@ -56,27 +55,27 @@ func initSugar(lc *Config) *zap.Logger {
 
 func Info(template string, args ...interface{}) {
 	msg, fields := dealWithArgs(template, args...)
-	writer(context.Background(), Sugar, LevelInfo, msg, LevelInfo, fields...)
+	writer(nil, Sugar, LevelInfo, msg, LevelInfo, fields...)
 }
-func InfoF(c *gin.Context, title string, template string, args ...interface{}) {
+func InfoF(r *http.Request, title string, template string, args ...interface{}) {
 	msg, fields := dealWithArgs(template, args...)
-	writer(c, Sugar, LevelInfo, msg, title, fields...)
+	writer(r, Sugar, LevelInfo, msg, title, fields...)
 }
 
 func Warn(template string, args ...interface{}) {
 	msg, fields := dealWithArgs(template, args...)
-	writer(context.Background(), Sugar, LevelWarn, msg, LevelWarn, fields...)
+	writer(nil, Sugar, LevelWarn, msg, LevelWarn, fields...)
 }
-func WarnF(c *gin.Context, title string, template string, args ...interface{}) {
+func WarnF(r *http.Request, title string, template string, args ...interface{}) {
 	msg, fields := dealWithArgs(template, args...)
-	writer(c, Sugar, LevelWarn, msg, title, fields...)
+	writer(r, Sugar, LevelWarn, msg, title, fields...)
 }
 
 func Error(template string, args ...interface{}) {
 	msg, fields := dealWithArgs(template, args...)
-	writer(context.Background(), Sugar, LevelError, msg, LevelError, fields...)
+	writer(nil, Sugar, LevelError, msg, LevelError, fields...)
 }
-func ErrorF(c *gin.Context, title string, template string, args ...interface{}) {
+func ErrorF(r *http.Request, title string, template string, args ...interface{}) {
 	msg, fields := dealWithArgs(template, args...)
-	writer(c, Sugar, LevelError, msg, title, fields...)
+	writer(r, Sugar, LevelError, msg, title, fields...)
 }
