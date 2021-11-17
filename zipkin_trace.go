@@ -12,10 +12,10 @@ import (
 	"time"
 )
 
-// tracer 引擎
+// Tracer 引擎
 var Tracer *zipkin.Tracer
 
-// ctx key，约定ctx的key名称
+// SpanContextKey ctx key，约定ctx的key名称
 var SpanContextKey = "default_app_context_span"
 
 type Trace struct {
@@ -25,7 +25,7 @@ type Trace struct {
 	Mod             uint64 // 采样率,0==不进行链路追踪，1==全量。值越大，采样率月底，对性能影响越小
 }
 
-// 初始化trace
+// InitTrace 初始化trace
 func InitTrace(serviceName, serviceEndpoint, zipkinAddr string, mod uint64) error {
 	err := GetNewTrace(serviceName, serviceEndpoint, zipkinAddr, mod).InitTracer()
 	if err != nil {
@@ -36,7 +36,7 @@ func InitTrace(serviceName, serviceEndpoint, zipkinAddr string, mod uint64) erro
 	return nil
 }
 
-// 获取配置
+// GetNewTrace 获取配置
 func GetNewTrace(serviceName, serviceEndpoint, zipkinAddr string, mod uint64) *Trace {
 	return &Trace{
 		ServiceName:     serviceName,
@@ -46,14 +46,14 @@ func GetNewTrace(serviceName, serviceEndpoint, zipkinAddr string, mod uint64) *T
 	}
 }
 
-// 初始化tracer
+// InitTracer 初始化tracer
 func (t *Trace) InitTracer() error {
 	var err error
 	Tracer, err = t.GetTrace()
 	return err
 }
 
-// 获取tracer
+// GetTrace 获取tracer
 func (t *Trace) GetTrace() (*zipkin.Tracer, error) {
 	if t == (&Trace{}) {
 		return nil, errors.New("trace is not init")
@@ -79,7 +79,7 @@ func (t *Trace) GetTrace() (*zipkin.Tracer, error) {
 	return tracer, err
 }
 
-// 根据上下文创建span
+// StartSpan 根据上下文创建span
 func StartSpan(name string) zipkin.Span {
 	ctx := context.WithValue(context.Background(), SpanContextKey, time.Now().UnixNano())
 	if Tracer != nil {
@@ -97,7 +97,7 @@ func StartSpan(name string) zipkin.Span {
 	}
 }
 
-// 根据请求头创建span
+// StartSpanR 根据请求头创建span
 func StartSpanR(r *http.Request, name string) zipkin.Span {
 	if Tracer != nil {
 		if r != (&http.Request{}) {
@@ -113,7 +113,7 @@ func StartSpanP(ctx model.SpanContext, name string) zipkin.Span {
 	return Tracer.StartSpan(name, zipkin.Parent(ctx))
 }
 
-// 结束
+// StopSpan 结束
 func StopSpan(span zipkin.Span) {
 	if span == nil {
 		return
@@ -121,7 +121,7 @@ func StopSpan(span zipkin.Span) {
 	span.Finish()
 }
 
-// 注入span信息到请求头
+// Inject 注入span信息到请求头
 func Inject(ctx context.Context, r *http.Request) error {
 	injector := b3.InjectHTTP(r)
 	if ctx == nil {

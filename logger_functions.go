@@ -64,7 +64,7 @@ func SetLogMaxSize(size int64) LogOptionFunc {
 	}
 }
 
-// 设置文件最大保留时间、默认值7天
+// SetLogMaxAge 设置文件最大保留时间、默认值7天
 func SetLogMaxAge(maxAge time.Duration) LogOptionFunc {
 	return func(c *Config) {
 		if maxAge != 0 {
@@ -73,7 +73,7 @@ func SetLogMaxAge(maxAge time.Duration) LogOptionFunc {
 	}
 }
 
-// 设置文件分割时间、默认值24*time.Hour(按天分割)
+// SetRotationTime 设置文件分割时间、默认值24*time.Hour(按天分割)
 func SetRotationTime(rotationTime time.Duration) LogOptionFunc {
 	return func(c *Config) {
 		if rotationTime != 0 {
@@ -82,7 +82,7 @@ func SetRotationTime(rotationTime time.Duration) LogOptionFunc {
 	}
 }
 
-// 设置保留的最大文件数量、没有默认值(表示不限制)
+// SetRotationCount 设置保留的最大文件数量、没有默认值(表示不限制)
 func SetRotationCount(n uint) LogOptionFunc {
 	return func(c *Config) {
 		if n != 0 {
@@ -91,7 +91,7 @@ func SetRotationCount(n uint) LogOptionFunc {
 	}
 }
 
-// 设置无缓冲写入日志，比较消耗性能
+// SetNoBuffWriter 设置无缓冲写入日志，比较消耗性能
 func SetNoBuffWriter() LogOptionFunc {
 	return func(c *Config) {
 		c.NoBuffWrite = true
@@ -146,7 +146,7 @@ func timeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
 	enc.AppendString(t.Format(layout))
 }
 
-// 按天切割按大小切割
+// GetWriter 按天切割按大小切割
 // filename 文件名
 // RotationSize 每个文件的大小
 // MaxAge 文件最大保留天数

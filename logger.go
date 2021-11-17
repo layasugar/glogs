@@ -1,4 +1,4 @@
-// Package log is a global internal glogs
+// Package glogs is a global internal glogs
 // glogs: this is extend package, use https://github.com/uber-go/zap
 package glogs
 
@@ -49,7 +49,7 @@ func initSugar(lc *Config) *zap.Logger {
 	}
 
 	filed := zap.Fields(zap.String("app_name", lc.appName), zap.String("app_mode", lc.appMode))
-	return zap.New(core, filed, zap.AddCaller(), zap.AddCallerSkip(1))
+	return zap.New(core, filed, zap.AddCaller(), zap.AddCallerSkip(3))
 	//Sugar = logger.Sugar()
 }
 

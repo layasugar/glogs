@@ -16,7 +16,6 @@ import (
 	"time"
 )
 
-// 有缓存通道
 var DingCh = make(chan *AlarmData, 10)
 var robotKey string
 var robotHost string
